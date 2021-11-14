@@ -9,15 +9,15 @@ Part 2:
 You are a developer for a company (XYZ Co) and you are writing a small web application that shows the status of the servers that host your software. 
 You need to integrate with the Server API provided by (ServerHosting Co) to get this information. The information should be presented in an application that can be accessed on a wide variety of devices and screen sizes. Ideally this data should stay as up to date as possible.
 
-Summary of the solution
+**Summary of the solution**
 
 Part 1:
 <br />
-Thoughts
+*Thoughts-*
 I have used AspNetCore.Diagnostics.HealthChecks for implementing the web-service that will provide the server status for all the dependent services. 
 <br />
 <br />
-Implementation
+*Implementation-*
 HealthCheckService is a monitoring service which constantly polls the dependent services. For the purpose of the challange I have created 
 	Has dependency on Sql Server - whose health status is returned as part of health checks
 Dependency Service: 
@@ -39,20 +39,20 @@ I've created a ServerStauts hub which allowd interested client applications to s
 
 Part 2: 
 <br />
-Thoughts
+*Thoughts-*
 There is already an option in  AspNetCore.HealthChecks.UI to have a UI which shows the data for depedent service - which offers a real time (with configurable option delay) to show the health status.
 For the challange I took the opportunity to showcase how to use the push model for reporting health status - I've used angluar application (using cli) to showcase same, however same approach 
 should work for other JS SPA frameworks.
 <br /><br />
-Implementation
 
+*Implementation-*
 I've created a singalr service to set up communication with the hub hosted in the HealthCheckService - I wanted to implement the retry setup if the UI fails to connect with signalr hub
 (hubconnection's catch with exponential backoff retry with a sealing of max retry) - however same is not the part of the submitted challange
 
 Along with the realtime health status nofication, UI also using the ServerStatusController to get the data, which can be refreshed using "Refresh" event.
 
 <br /><br />
-Technology stack used
+*Technology stack used*
 <br />
 Dotnet Core 3.1 
 <br />
