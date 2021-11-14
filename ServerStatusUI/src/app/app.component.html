@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <div class="d-lg-flex flex-wrap flex-row container pt-3">
+    <div class="col-lg-3 col-lg-6 col-lg-12">
+      <h3 class="pt-3">
+        XYZ Co. Service Health Dashboard
+      </h3>
+    </div>
+  </div>
+  <div class="flex-wrap flex-row container">
+
+    <div class="table-responsive-lg">
+      <div>
+
+      </div>
+      <h5 class="pt-3">
+       RealTime Status
+      </h5>
+      <table class="table">
+        <thead>
+          <tr>
+
+            <th scope="col">Server Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor='let item of serverStatuses' [ngStyle]="{'color':item.healthStatus == 'Healthy' ? 'green' : 'red'}">
+
+            <td >{{item.serverName}}</td>
+            <td >{{item.healthStatus}}</td>
+            <td >{{item.date| date:'medium'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="flex-wrap flex-row container">
+
+    <div class="table-responsive-lg">
+
+      <h5 class="pt-3" >
+        Last 15 Min Status
+
+      </h5>
+      <div (click)='GetServerStatus()'><a href="#" class="text-primary">Refresh</a></div>
+      <table class="table">
+        <tr>
+
+        </tr>
+        <thead>
+          <tr>
+
+            <th scope="col">Server Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr *ngFor='let item of serverStatusesHistory'>
+
+            <td >{{item.serverName}}</td>
+            <td >{{item.healthStatus}}</td>
+            <td >{{item.date| date:'medium'}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

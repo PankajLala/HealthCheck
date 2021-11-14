@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  serverstatusui:
+    container_name: serverstatusui
+    build: .
+    ports:
+      - "4200:80"

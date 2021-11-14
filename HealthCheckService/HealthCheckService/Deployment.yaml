@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthcheckservice
+spec:
+  selector:
+    matchLabels:
+      app: healthcheckservice
+  template:
+    metadata:
+      labels:
+        app: healthcheckservice
+    spec:
+      containers:
+      - name: healthcheckservice
+        image: serverstatusregistry.azurecr.io/healthcheckservice:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

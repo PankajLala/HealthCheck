@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  serverhostingapi:
+    image: ${DOCKER_REGISTRY-}healthcheckservice
+    build:
+      context: .
+      dockerfile: HealthCheckService/Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+
