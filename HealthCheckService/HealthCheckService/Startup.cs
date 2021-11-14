@@ -42,6 +42,7 @@ namespace HealthCheckService
             services.Configure<HealthCheckPublisherOptions>(options =>
             {
                 options.Delay = TimeSpan.FromSeconds(2);
+                options.Period = TimeSpan.FromSeconds(10);
                
             });
 
