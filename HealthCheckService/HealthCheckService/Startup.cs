@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using HealthCheckService;
 using Microsoft.AspNetCore.Builder;
@@ -80,30 +83,35 @@ namespace HealthCheckService
 
             app.UseAuthorization();
 
-            app.UseHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
-            {
-                Predicate = _ => false,
-                ResponseWriter = (context, _) => WriteHealthCheckUIResponse(context, ReadinessPublisher.LatestServerStatus)
-            });
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<ServerStatusHub>("/serverstatushub");
+
+                endpoints.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+                {
+                    Predicate = _ => false, 
+                    ResponseWriter = (context, _) => WriteHealthCheckUIResponse(context, ReadinessPublisher.LatestServerStatus)
+                });
             });
+
         }
 
-        private Task WriteHealthCheckUIResponse(HttpContext context, IEnumerable<ServerStatus> latestServerStatus)
+        private async Task WriteHealthCheckUIResponse(HttpContext context, IEnumerable<ServerStatus> latestServerStatus)
         {
-            context.Response.ContentType = "application/json; charset=utf-8";
-
-            var options = new JsonWriterOptions
+            if (latestServerStatus != null)
             {
-                Indented = true
-            };
+                context.Response.ContentType = "application/json";
 
-            return Task.FromResult(latestServerStatus);
+                await using var responseStream = new MemoryStream();
+
+                await JsonSerializer.SerializeAsync(responseStream, latestServerStatus);
+                await context.Response.BodyWriter.WriteAsync(responseStream.ToArray());
+            }
+            else
+            {
+                await context.Response.BodyWriter.WriteAsync(new byte[] { (byte)'{', (byte)'}' });
+            }
         }
     }
 }
