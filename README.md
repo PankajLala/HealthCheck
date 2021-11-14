@@ -12,9 +12,11 @@ You need to integrate with the Server API provided by (ServerHosting Co) to get 
 Summary of the solution
 
 Part 1:
+<br />
 Thoughts
 I have used AspNetCore.Diagnostics.HealthChecks for implementing the web-service that will provide the server status for all the dependent services. 
-
+<br />
+<br />
 Implementation
 HealthCheckService is a monitoring service which constantly polls the dependent services. For the purpose of the challange I have created 
 	Has dependency on Sql Server - whose health status is returned as part of health checks
@@ -36,11 +38,12 @@ For persisting the health check data and pushing it to subscribed client applica
 I've created a ServerStauts hub which allowd interested client applications to subscribe to hosted SingalR service to receive the health check notifications.
 
 Part 2: 
+<br />
 Thoughts
 There is already an option in  AspNetCore.HealthChecks.UI to have a UI which shows the data for depedent service - which offers a real time (with configurable option delay) to show the health status.
 For the challange I took the opportunity to showcase how to use the push model for reporting health status - I've used angluar application (using cli) to showcase same, however same approach 
 should work for other JS SPA frameworks.
-
+<br /><br />
 Implementation
 
 I've created a singalr service to set up communication with the hub hosted in the HealthCheckService - I wanted to implement the retry setup if the UI fails to connect with signalr hub
@@ -48,10 +51,15 @@ I've created a singalr service to set up communication with the hub hosted in th
 
 Along with the realtime health status nofication, UI also using the ServerStatusController to get the data, which can be refreshed using "Refresh" event.
 
+<br /><br />
 Technology stack used
+<br />
 Dotnet Core 3.1 
+<br />
 Dapper
+<br />
 SingalR (service hosted)
+<br />
 Sql Server
 
 
