@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { SignalRService } from './services/signal-r.service';
 import { ServerStatus } from './interface/ServerStatus';
 import { AppComponentService } from './services/app.component.service';
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit{
   public serverStatuses: ServerStatus[] = [];
   public serverStatusesHistory: ServerStatus[] = [];
 
-  constructor(public signalRService: SignalRService, protected appComponentService: AppComponentService, private _ngZone: NgZone) {}
+  constructor(public signalRService: SignalRService, protected appComponentService: AppComponentService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.signalRService.startConnection();
@@ -24,9 +24,8 @@ export class AppComponent implements OnInit{
     this.signalRService._responseReceivedEvents$.subscribe((data:ServerStatus[]) => {
       if(data){
         this.serverStatuses.length=0;
-          this._ngZone.run(()=>{
-            this.serverStatuses = data;
-          })
+        this.serverStatuses = data;
+        this.changeDetectorRef.detectChanges();
       }
     })
   }
