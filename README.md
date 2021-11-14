@@ -13,20 +13,22 @@ You need to integrate with the Server API provided by (ServerHosting Co) to get 
 
 Part 1:
 <br />
-*Thoughts-*
+*Thoughts:*
 I have used AspNetCore.Diagnostics.HealthChecks for implementing the web-service that will provide the server status for all the dependent services. 
 <br />
 <br />
-*Implementation-*
+*Implementation:*
 HealthCheckService is a monitoring service which constantly polls the dependent services. For the purpose of the challange I have created 
-	Has dependency on Sql Server - whose health status is returned as part of health checks
-Dependency Service: 
-	ProfileService having dependency on Redis thus AspNetCore.HealthChecks.Redis package should be used when configuring the health check
+	a service which has dependency on Sql Server - whose health status is returned as part of health checks
+<br />
+Dependent Service: 
+<br />
+	ProfileService: having dependency on Redis thus AspNetCore.HealthChecks.Redis package should be used when configuring the health check
 					 For the purpose of challange and to simulate the failure scenario I've used a custom implementation to modify behaviour of /health endpoint to randomly return different health status
 	
 
 Adding AspNetCore.Diagnostics.HealthChecks provides a /health endpoint which returns the status of the configured health checks. An expected aspect is that the client monitoring
-UI will regularly invoke. 
+UI will regularly call to get health status. 
 
 Instead of adding resonsibility on regularly polling the /health endpoint - I've taken the approach of pushing the health check notification to the dashboard application. 
 
@@ -39,13 +41,13 @@ I've created a ServerStauts hub which allowd interested client applications to s
 
 Part 2: 
 <br />
-*Thoughts-*
+*Thoughts:*
 There is already an option in  AspNetCore.HealthChecks.UI to have a UI which shows the data for depedent service - which offers a real time (with configurable option delay) to show the health status.
 For the challange I took the opportunity to showcase how to use the push model for reporting health status - I've used angluar application (using cli) to showcase same, however same approach 
 should work for other JS SPA frameworks.
 <br /><br />
 
-*Implementation-*
+*Implementation:*
 I've created a singalr service to set up communication with the hub hosted in the HealthCheckService - I wanted to implement the retry setup if the UI fails to connect with signalr hub
 (hubconnection's catch with exponential backoff retry with a sealing of max retry) - however same is not the part of the submitted challange
 
