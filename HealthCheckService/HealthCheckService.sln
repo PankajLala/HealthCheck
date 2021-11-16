@@ -9,6 +9,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProfileService", "ProfileService\ProfileService.csproj", "{02202073-5E11-464F-8A95-9501AF7969A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HealthCheckService.Test", "HealthCheckService.Test\HealthCheckService.Test.csproj", "{B0FD5498-1D95-4A26-BA40-C289D0AE7397}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{02202073-5E11-464F-8A95-9501AF7969A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02202073-5E11-464F-8A95-9501AF7969A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02202073-5E11-464F-8A95-9501AF7969A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0FD5498-1D95-4A26-BA40-C289D0AE7397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0FD5498-1D95-4A26-BA40-C289D0AE7397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0FD5498-1D95-4A26-BA40-C289D0AE7397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0FD5498-1D95-4A26-BA40-C289D0AE7397}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

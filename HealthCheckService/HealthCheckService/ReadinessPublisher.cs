@@ -31,11 +31,10 @@ namespace HealthCheckService
             _services = services;
         }
 
+
         public async Task PublishAsync(HealthReport report,
             CancellationToken cancellationToken)
         {
-            
-
             var serverStatuses = report.Entries.Select(service => new ServerStatus {Date = DateTimeOffset.Now, ServerName = service.Key, HealthStatus = service.Value.Status.ToString()}).ToList();
 
             LatestServerStatus = serverStatuses;
