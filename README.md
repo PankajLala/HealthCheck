@@ -18,38 +18,39 @@ I have used AspNetCore.Diagnostics.HealthChecks for implementing the web-service
 <br />
 <br />
 *Implementation:*
-HealthCheckService is a monitoring service which constantly polls the dependent services. For the purpose of the challange I have created 
-	a service which has dependency on Sql Server - whose health status is returned as part of health checks
+HealthCheckService is a monitoring service which constantly provides the health status of dependent to the interested clients. For the purpose of the challange I have configured  the depdendencies on Sql Server DB, another dependent service (ProfileService) and showcased how easy it is to configure health check using the AspNetCore.Diagnostics.HealthChecks package.
+	
 <br />
 Dependent Service: 
 <br />
-	ProfileService: having dependency on Redis thus AspNetCore.HealthChecks.Redis package should be used when configuring the health check
-					 For the purpose of challange and to simulate the failure scenario I've used a custom implementation to modify behaviour of /health endpoint to randomly return different health status
-	
+ProfileService: I wanted to showcase, ProfileService having dependency on Redis & thus  AspNetCore.HealthChecks.Redis package should be used when configuring the health checks.
+For the purpose of challange and to simulate the intermittent failure scenario I've used a custom implementation to modify behaviour of /health endpoint to randomly return different health status
 
 Adding AspNetCore.Diagnostics.HealthChecks provides a /health endpoint which returns the status of the configured health checks. An expected aspect is that the client monitoring
-UI will regularly call to get health status. 
+UI/App can get the health check status by regularly calling the said endpoint.
 
-Instead of adding responsibility on regularly polling the /health endpoint - I've taken the approach of pushing the health check notification to the dashboard application. 
+Instead of adding responsibility solely on client app/UI to regularly poll the /health endpoint - I've taken the approach of HealthCheckService pushing the health check notification to the interested application and at the same time providing the option for getting latest status using /health endpoint.
 
 To persist the health check results for dependent service I've used simple repository layer which is using Dapper for data persistence to a sql store.
-ServerStatusController implements the route to get the historical health check data - currently it return the last 15 min of the activity.
 
-For persisting the health check data and pushing it to subscribed client application - I've provided the implementation of IHealthCheckPublisher with the peroid set to 10 sec.
+I've also introduced ServerStatusController which implements the route to get the historical health check data - currently it return the last 15 min of the activity - at the same time it can be enhanced to return data based on filters, date range, status etc.
 
-I've created a ServerStatus hub which allowed interested client applications to subscribe to hosted SignalR service to receive the health check notifications.
+Instead of baking a custom Timer to regulaly collate the health status, transform it to domain entity for persistence and send notifications, I hooked it in the IHealthCheckPublisher and configure it timeperiod for 10 Sec from a default of 30 Sec.
+
+For the challange in order to publish the results, I've hosted SignalR within the HealthCheckService, created route for clients to register with service to regularly receive health check via push notifications. For a high performant, scalable and available implementation Az SignalR service should be the preferred option. 
 
 Part 2: 
 <br />
 *Thoughts:*
-There is already an option in  AspNetCore.HealthChecks.UI to have a UI which shows the data for dependent service - which offers a real time (with configurable option delay) to show the health status.
-For the challange I took the opportunity to showcase how to use the push model for reporting health status - I've used angluar application (using cli) to showcase same, however same approach 
+There is already an option in  AspNetCore.HealthChecks.UI to have a UI which shows the data for dependent service - which offers a way to show the health status - this is  acheived by UI regularly polling the /health endpoint.
+
+For the challange I took the opportunity to showcase how to use the push model for reporting health status - I've used an Angular SPA  to showcase same, however same approach 
 should work for other JS SPA frameworks.
 <br /><br />
 
 *Implementation:*
-I've created a singalr service to set up communication with the hub hosted in the HealthCheckService - I wanted to implement the retry setup if the UI fails to connect with signalr hub
-(hubconnection's catch with exponential backoff retry with a sealing of max retry) - however same is not the part of the submitted challange
+I've created a singalR service to set up communication with the hub hosted in the HealthCheckService - I wanted to implement the retry setup if the UI fails to connect with signalR hub
+(intial thoughts are to use Rxjx's .retryWhen ) - however same is not the part of the submitted challange
 
 Along with the realtime health status nofication, UI also using the ServerStatusController to get the data, which can be refreshed using "Refresh" event.
 
